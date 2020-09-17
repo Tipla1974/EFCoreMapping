@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Model.Entities
 {
@@ -25,13 +26,13 @@ namespace Model.Entities
         public void Opslag(decimal percentage) 
         { 
             Wedde *= (1M + percentage / 100M); 
-        } 
-        
+        }
+
         // --------------------- 
         // Navigation properties 
         // --------------------- 
-        
-        [ForeignKey(nameof(CampusId))] 
-        public virtual ASSCampus ASSCampus { get; set; } // (2) 
+
+        [ForeignKey(nameof(CampusId))] public virtual ASSCampus ASSCampus { get; set; }
+        public virtual ICollection<ASSDocentActiviteit> DocentenActiviteiten { get; set; } = new List<ASSDocentActiviteit>();
     } 
 }

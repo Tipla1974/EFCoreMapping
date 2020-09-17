@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Model.Repositories;
 
 namespace Model.Migrations
 {
     [DbContext(typeof(EFCoreMappingContext))]
-    partial class EFCoreMappingContextModelSnapshot : ModelSnapshot
+    [Migration("20200917102022_Seeding ASSWerknemer1")]
+    partial class SeedingASSWerknemer1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

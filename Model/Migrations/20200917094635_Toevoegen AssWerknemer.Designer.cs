@@ -10,8 +10,8 @@ using Model.Repositories;
 namespace Model.Migrations
 {
     [DbContext(typeof(EFCoreMappingContext))]
-    [Migration("20200916130751_Veel-op-veel")]
-    partial class Veelopveel
+    [Migration("20200917094635_Toevoegen AssWerknemer")]
+    partial class ToevoegenAssWerknemer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,23 @@ namespace Model.Migrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Model.Entities.ASSActiviteit", b =>
+                {
+                    b.Property<int>("ActiviteitId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Naam")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("ActiviteitId");
+
+                    b.ToTable("ASSActiviteiten");
+                });
 
             modelBuilder.Entity("Model.Entities.ASSBoek", b =>
                 {
@@ -189,6 +206,47 @@ namespace Model.Migrations
                     b.HasIndex("CampusId");
 
                     b.ToTable("ASSDocenten");
+                });
+
+            modelBuilder.Entity("Model.Entities.ASSDocentActiviteit", b =>
+                {
+                    b.Property<int>("DocentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ActiviteitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AantalUren")
+                        .HasColumnType("int");
+
+                    b.HasKey("DocentId", "ActiviteitId");
+
+                    b.HasIndex("ActiviteitId");
+
+                    b.ToTable("ASSDocentenActiviteiten");
+                });
+
+            modelBuilder.Entity("Model.Entities.ASSWerknemer", b =>
+                {
+                    b.Property<int>("WerknemerId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Familienaam")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OversteWerknemerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Voornaam")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("WerknemerId");
+
+                    b.HasIndex("OversteWerknemerId");
+
+                    b.ToTable("AssWerknemers");
                 });
 
             modelBuilder.Entity("Model.Entities.Campus", b =>
@@ -383,6 +441,28 @@ namespace Model.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ASSDocentDocentId");
                         });
+                });
+
+            modelBuilder.Entity("Model.Entities.ASSDocentActiviteit", b =>
+                {
+                    b.HasOne("Model.Entities.ASSActiviteit", "Activiteit")
+                        .WithMany("DocentenActiviteiten")
+                        .HasForeignKey("ActiviteitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Model.Entities.ASSDocent", "Docent")
+                        .WithMany("DocentenActiviteiten")
+                        .HasForeignKey("DocentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Model.Entities.ASSWerknemer", b =>
+                {
+                    b.HasOne("Model.Entities.ASSWerknemer", "Overste")
+                        .WithMany("Werknemers")
+                        .HasForeignKey("OversteWerknemerId");
                 });
 
             modelBuilder.Entity("Model.Entities.Campus", b =>
